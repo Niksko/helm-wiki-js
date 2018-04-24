@@ -1,0 +1,22 @@
+image:
+  registry: docker.io
+  repository: requarks/wiki
+  tag: master
+  pullPolicy: IfNotPresent
+env:
+  wikiAdminEmail: "admin@example.com"
+ports:
+  externalPort: 3001
+persistence:
+  config:
+    # Optionally specify claimName to manually override the PVC to be used for
+    # the config directory. If claimName is specified, storageClass and size
+    # are ignored.
+    ## claimName: "plex-config-pvc"
+    # Optionally specify a storage class to be used for the config directory.
+    # If not specified and claimName is not specified, the default storage
+    # class will be used.
+    storageClass: ""
+    # The requested size of the volume to be used when creating a
+    # PersistentVolumeClaim.
+    size: 10Mi

@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "wikijs.fullname" . }}
+  labels:
+    app: {{ template "wikijs.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "wikijs.fullname" . }}
+    spec:
+      containers:
+      - name: {{ template "wikijs.fullname" . }}
+        image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+          - name: WIKI_ADMIN_EMAIL
+            value: "{{ .Values.env.wikiAdminEmail }}"
+        ports:
+        - name: http
+          containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 120
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        volumeMounts:
+        - name: wikijs-config
+          mountPath: /var/wiki/config.yaml
+      volumes:
+      - name: wikijs-config
+        persistentVolumeClaim:
+        {{ if .Values.persistence.config.claimName }}
+          claimName: "{{ .Values.persistence.config.claimName }}"
+        {{ else }}
+          claimName: {{ template "wikijs.fullname" . }}-wikijs-config
+        {{ end }}

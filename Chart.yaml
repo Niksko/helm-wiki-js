@@ -1,0 +1,16 @@
+name: wiki-js
+version: "0.0.1"
+description: Deploys wiki.js (https://github.com/Requarks/wiki) to a Kubernetes cluster
+keywords:
+  - wiki
+  - javascript
+  - js
+home: https://github.com/Niksko/helm-wiki-js
+sources:
+  - https://github.com/Niksko/helm-wiki-js
+maintainers: 
+  - name: "Nikolas Skoufis"
+    email: "n.skoufis@gmail.com"
+    url: "https://skouf.com"
+engine: gotpl
+appVersion: # TODO
